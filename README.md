@@ -1,2 +1,2 @@
 # NovaVerse-Platformer
-A Mario-like platformer
+A MEtroidvania Game
