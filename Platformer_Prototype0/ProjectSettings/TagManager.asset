@@ -13,7 +13,7 @@ TagManager:
   - UI
   - Player
   - Ground
-  - 
+  - Attackable
   - 
   - 
   - 
@@ -49,4 +49,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 2013456361
+    locked: 0
+  - name: FX
+    uniqueID: 452465173
     locked: 0
