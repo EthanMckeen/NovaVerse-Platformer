@@ -31,37 +31,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4763718556439029786}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2537315344648380514
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8942989494508834157}
-  m_Layer: 6
-  m_Name: GroundCheck
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8942989494508834157
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2537315344648380514}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.184, y: -0.71, z: 0}
-  m_LocalScale: {x: 1.0809045, y: 1.0809045, z: 1.0809045}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4763718556439029786}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2580159394996964455
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,6 +204,37 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.05}
   serializedVersion: 2
   m_Radius: 0.07628459
+--- !u!1 &6152669695459428334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6486710047872508534}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6486710047872508534
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6152669695459428334}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.161, y: -0.139, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4763718556439029786}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6379673765855009521
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,19 +5124,19 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9215498686422504780}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.009088879, z: -0, w: 0.9999587}
-  m_LocalPosition: {x: -34.172, y: 16.911, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.056, y: -0.007, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8942989494508834157}
+  - {fileID: 6486710047872508534}
   - {fileID: 655889213614645032}
   - {fileID: 1312944153135445296}
   - {fileID: 7123068602992949689}
   - {fileID: 3516980556913594607}
   - {fileID: 7409646266071312082}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 1.042, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8178034690885184750
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5235,9 +5235,9 @@ MonoBehaviour:
   jumpBufferFrames: 8
   coyoteTime: 0.01
   maxAirJump: 1
-  groundCheckPoint: {fileID: 8942989494508834157}
-  groundCheckY: 0.2
-  groundCheckX: 0.4
+  groundCheckPoint: {fileID: 6486710047872508534}
+  boxSize: {x: 0.6, y: 0.15}
+  castDistance: 0.5
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128
@@ -5326,6 +5326,7 @@ MonoBehaviour:
   invincible: 0
   healing: 0
   casting: 0
+  cutscene: 0
 --- !u!61 &5777713015816450359
 BoxCollider2D:
   m_ObjectHideFlags: 0

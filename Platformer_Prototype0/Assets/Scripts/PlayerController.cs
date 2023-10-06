@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         pState = GetComponent<PlayerStateList>();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
@@ -157,6 +158,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (pState.cutscene)
+        {
+            Move();
+            Jump();
+            return;
+        }
         GetInputs();
         RestoreTimeScale();
         UpdateJumpVariables();

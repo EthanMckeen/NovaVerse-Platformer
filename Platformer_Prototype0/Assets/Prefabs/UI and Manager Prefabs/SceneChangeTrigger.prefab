@@ -125,4 +125,4 @@ MonoBehaviour:
   transitionTo: 
   startPoint: {fileID: 6449310171464445415}
   exitDirection: {x: -1, y: 0}
-  exitTime: 0.5
+  exitTime: 0.2
