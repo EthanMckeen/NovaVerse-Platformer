@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     [Header("Vertical Movement Settings")]
     [SerializeField] GameObject jumpFX;
     private GameObject currentJumpFX;
-    [SerializeField] private float jumpForce = 45;
+    [SerializeField] private float jumpForce = 25;
     private int jumpBufferCounter;
     [SerializeField] private int jumpBufferFrames;
     private float coyoteTimeCounter = 0;
@@ -23,8 +23,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Ground Check Settings")]
     [SerializeField] private Transform groundCheckPoint;
-    [SerializeField] private float groundCheckY = 0.2f;
-    [SerializeField] private float groundCheckX = 0.5f;
+    [SerializeField] private Vector2 boxSize;
+    [SerializeField] private float castDistance;
     [SerializeField] private LayerMask whatIsGround;
     [Space(5)]
 
@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         pState = GetComponent<PlayerStateList>();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
@@ -150,10 +151,19 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireCube(SideAtkTransform.position, SideAtkArea);
         Gizmos.DrawWireCube(UpAtkTransform.position, UpAtkArea);
         Gizmos.DrawWireCube(DownAtkTransform.position, DownAtkArea);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(groundCheckPoint.position-transform.up*castDistance, boxSize);
+
     }
     // Update is called once per frame
     void Update()
     {
+        if (pState.cutscene)
+        {
+            Move();
+            Jump();
+            return;
+        }
         GetInputs();
         RestoreTimeScale();
         UpdateJumpVariables();
@@ -269,6 +279,26 @@ public class PlayerController : MonoBehaviour
         yield return null;
     }
 
+    public IEnumerator WalkIntoNewScene(Vector2 _exitDir, float _delay)
+    {
+        //If exit direction is upwards
+        if (_exitDir.y != 0)
+        {
+            rb.velocity = jumpForce * _exitDir;
+        }
+
+        //If exit direction requires horizontal movement
+        if (_exitDir.x != 0)
+        {
+            xAxis = _exitDir.x > 0 ? 1 : -1;
+
+            Move();
+        }
+
+        Turn();
+        yield return new WaitForSeconds(_delay);
+        pState.cutscene = false;
+    }
     void Attack()
     {
         if(timeSinceAttack < timeBetweenAttack * 2f)
@@ -310,7 +340,11 @@ public class PlayerController : MonoBehaviour
         {
             if(objectsToHit[i].GetComponent<Enemy>() != null)
             {
-                objectsToHit[i].GetComponent<Enemy>().EnemyHit(damage, (transform.position -objectsToHit[i].transform.position).normalized, _recoilStrength);         
+                objectsToHit[i].GetComponent<Enemy>().EnemyHit(damage, (transform.position -objectsToHit[i].transform.position).normalized, _recoilStrength);
+                if (objectsToHit[i].CompareTag("Enemy"))
+                {
+                    Mana += manaGain; 
+                }
             }
         }
     }
@@ -494,7 +528,7 @@ public class PlayerController : MonoBehaviour
     void Heal()
     {
         if (Input.GetButton("Cast/Heal") && castOrHealTimer > 0.25f && Mana > 0 &&
-            !pState.jumping && !pState.dashing)
+            !pState.jumping && !pState.dashing && Grounded())
         {
             //set animations
             pState.healing = true;
@@ -548,6 +582,10 @@ public class PlayerController : MonoBehaviour
 
         if (Grounded())
         {
+            if (fireDownSpell.activeInHierarchy)
+            {
+                pState.casting = false;
+            }
             //disable downspell if on the ground
             fireDownSpell.SetActive(false);
         }
@@ -600,8 +638,8 @@ public class PlayerController : MonoBehaviour
             fireDownSpell.SetActive(true);
             yield return new WaitForSeconds(0.35f);
             rb.gravityScale = gravity;
-            pState.casting = false;
             anim.SetBool("Casting", false);
+            //pState.casting = false;
         }
 
         Mana -= manaCost;
@@ -610,14 +648,22 @@ public class PlayerController : MonoBehaviour
 
     public bool Grounded()
     {
-        if(Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckY, whatIsGround)
+        if(Physics2D.BoxCast(groundCheckPoint.position, boxSize, 0, -transform.up, castDistance, whatIsGround))
+        {
+            return true;
+        }
+        else { return false;}
+
+        /*if(Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckY, whatIsGround)
            || Physics2D.Raycast(groundCheckPoint.position + new Vector3(groundCheckX, 0, 0), Vector2.down, groundCheckY, whatIsGround)
            || Physics2D.Raycast(groundCheckPoint.position + new Vector3(-groundCheckX, 0, 0), Vector2.down, groundCheckY, whatIsGround))
         {
             return true;
         }
-        else { return false; }
+        else { return false; }*/
     }
+
+
 
     void Jump()
     {
