@@ -5,6 +5,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform thePlayer;
+    [Space(5)]
+
+    [Header("Ui and Camera Stuff")]
+    [SerializeField] private UIManager hud;
+    [SerializeField] private GameObject _camFollowGO;
+    private CameraFollowObj _camFocus;
+    private float fallSpeedThreshold;
+    [Space(5)]
+
     [Header("Horizontal Movement Settings")]
     [SerializeField] private float walkSpeed = 1;
     [Space(5)]
@@ -112,7 +121,8 @@ public class PlayerController : MonoBehaviour
 
     public void Awake()
     {
-        if(Instance != null && Instance != this)
+        pState = GetComponent<PlayerStateList>();
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
         }
@@ -122,27 +132,29 @@ public class PlayerController : MonoBehaviour
         }
         Health = maxHealth;
         DontDestroyOnLoad(gameObject);
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
-        pState = GetComponent<PlayerStateList>();
-        rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
-        anim = GetComponent<Animator>();
-        if(transform.localScale.x > 0)
+
+        //pState = GetComponent<PlayerStateList>();
+        if (transform.rotation.y == 0)
         {
             pState.lookingRight = true;
         }
-        else if(transform.localScale.x < 0)
+        else if (transform.rotation.y == 180)
         {
             pState.lookingRight = false;
         }
+        rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
         gravity = rb.gravityScale;
         castOrHealTimer = 0f;
+        _camFocus = _camFollowGO.GetComponent<CameraFollowObj>();
+
+        fallSpeedThreshold = CameraManager.instance._fallSpeedThreshold;
     }
 
     private void OnDrawGizmos()
@@ -170,6 +182,7 @@ public class PlayerController : MonoBehaviour
         if (pState.dashing) return;
         Move();
         Jump();
+        Falling();
         StartDash();
         Attack();
         IframeFlash();
@@ -230,6 +243,8 @@ public class PlayerController : MonoBehaviour
             Vector3 rotator = new Vector3(transform.rotation.x, 180f, transform.rotation.z);
             transform.rotation = Quaternion.Euler(rotator);
             pState.lookingRight = !pState.lookingRight;
+            //turn cam focus
+            _camFocus.CallCamTurn();
         }
 
         else
@@ -237,6 +252,8 @@ public class PlayerController : MonoBehaviour
             Vector3 rotator = new Vector3(transform.rotation.x, 0f, transform.rotation.z);
             transform.rotation = Quaternion.Euler(rotator);
             pState.lookingRight = !pState.lookingRight;
+            //turn cam focus
+            _camFocus.CallCamTurn();
         }
     }
 
@@ -520,7 +537,7 @@ public class PlayerController : MonoBehaviour
             if (mana != value)
             {
                 mana = Mathf.Clamp(value, 0, 1);
-                manaStorage.fillAmount = Mana;
+                hud.UpdateManaBall(Mana);
             }
         }
     }
@@ -690,6 +707,20 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("yVelocity", rb.velocity.y);
         anim.SetBool("Jumping", !Grounded());
 
+    }
+
+    void Falling()
+    {
+        if(rb.velocity.y < fallSpeedThreshold && !CameraManager.instance.IsLerpingYDamping && !CameraManager.instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.instance.LerpYDamping(true);
+        }
+
+        if(rb.velocity.y >= 0f && !CameraManager.instance.IsLerpingYDamping && CameraManager.instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.instance.LerpedFromPlayerFalling = false;
+            CameraManager.instance.LerpYDamping(false);
+        }
     }
 
     void UpdateJumpVariables()
