@@ -358,6 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneFader: {fileID: 3434339520288014500}
+  manaStorage: {fileID: 6769972604836643194}
 --- !u!1001 &4225829000624888482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -455,6 +456,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed5290c80badf5841a488bcee2d37ae4, type: 3}
+--- !u!114 &6769972604836643194 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7446401959816354776, guid: ed5290c80badf5841a488bcee2d37ae4, type: 3}
+  m_PrefabInstance: {fileID: 4225829000624888482}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &9115466169150488237 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4910486246574547983, guid: ed5290c80badf5841a488bcee2d37ae4, type: 3}

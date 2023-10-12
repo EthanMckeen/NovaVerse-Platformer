@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
             Instance = this;
         }
         Health = maxHealth;
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     // Start is called before the first frame update
@@ -152,7 +152,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         gravity = rb.gravityScale;
         castOrHealTimer = 0f;
-        _camFocus = _camFollowGO.GetComponent<CameraFollowObj>();
+        //_camFocus = _camFollowGO.GetComponent<CameraFollowObj>();
 
         fallSpeedThreshold = CameraManager.instance._fallSpeedThreshold;
     }
@@ -244,7 +244,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(rotator);
             pState.lookingRight = !pState.lookingRight;
             //turn cam focus
-            _camFocus.CallCamTurn();
+            CameraFollowObj.Instance.CallCamTurn();
         }
 
         else
@@ -253,7 +253,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(rotator);
             pState.lookingRight = !pState.lookingRight;
             //turn cam focus
-            _camFocus.CallCamTurn();
+            CameraFollowObj.Instance.CallCamTurn(); ;
         }
     }
 

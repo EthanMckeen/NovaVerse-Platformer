@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
         {
             Instance = this;
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     public void UpdateManaBall(float Mana)
