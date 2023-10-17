@@ -172,8 +172,15 @@ public class PlayerController : MonoBehaviour
     {
         if (pState.cutscene)
         {
-            Move();
-            Jump();
+            xAxis = 0f;
+            yAxis = 0f;
+            if (Grounded())
+            {
+                Jump();
+                Move();
+                rb.velocity = Vector2.zero;
+            }
+            
             return;
         }
         GetInputs();
@@ -453,7 +460,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator Iframes()
     {
         pState.invincible = true;
-        GameObject _bloodSpurtParticles = Instantiate(bloodSpurt, transform.position, Quaternion.identity);
+        GameObject _bloodSpurtParticles = Instantiate(bloodSpurt, new Vector3(transform.position.x, transform.position.y, transform.position.z -1) , Quaternion.identity);
         Destroy(_bloodSpurtParticles, 1.5f);
         anim.SetTrigger("Hurting");
         yield return new WaitForSeconds(1f);

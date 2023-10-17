@@ -12,14 +12,18 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float speed;
     [SerializeField] protected float damage;
 
+    private float hitFlashSpeed = 4f;
+
     protected float recoilTimer;
     protected Rigidbody2D rb;
+    protected SpriteRenderer sr;
 
-    
+
 
     protected virtual void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
         player = PlayerController.Instance;
     }
 

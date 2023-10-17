@@ -35,7 +35,7 @@ public class CameraFollowObj : MonoBehaviour
 
     public void CallCamTurn()
     {
-        Debug.Log(!PlayerController.Instance.pState.lookingRight);
+        //Debug.Log(!PlayerController.Instance.pState.lookingRight);
         LeanTween.rotateY(gameObject, DetermineEndRotation(), _flipYRotationTime).setEaseInOutSine(); 
     }
 
