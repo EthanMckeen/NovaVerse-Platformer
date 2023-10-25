@@ -4,36 +4,70 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("HEALTH")]
     [SerializeField] protected float health;
+    [SerializeField] protected Material matFlash;
+    [Space(5)]
+    [Header("Basic Enemy Settings")]
     [SerializeField] protected float recoilLength;
     [SerializeField] protected float recoilFactor;
     [SerializeField] protected bool isRecoiling;
     [SerializeField] protected PlayerController player;
     [SerializeField] protected float speed;
     [SerializeField] protected float damage;
-
-    private float hitFlashSpeed = 4f;
+    [SerializeField] protected GameObject yellowBlood;
+    [Space(5)]
+    private float hitFlashtime = 0.1f;
 
     protected float recoilTimer;
     protected Rigidbody2D rb;
     protected SpriteRenderer sr;
+    protected Animator anim;
+    private Material matDefault;
+    protected enum EnemyStates
+    {
+        //Crawler
+        Crawler_Idle,
+        Crawler_Flip,
 
+        //Flyer
+        Flyer_Idle,
+        Flyer_Chase,
+        Flyer_Stun,
+        Flyer_Death,
 
+        //Charger
+        Charger_Idle,
+        Charger_Suprised,
+        Charger_Charge
+    }
+    protected EnemyStates currentEnemyState;
 
+    protected virtual EnemyStates GetCurrentEnemyState
+    {
+        get { return currentEnemyState; }
+        set
+        {
+            if(currentEnemyState != value)
+            {
+                currentEnemyState = value;
+                ChangeCurrentAnimation();
+            }
+        }
+    }
     protected virtual void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+        matDefault = sr.material;
         player = PlayerController.Instance;
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        if(health <= 0)
-        {
-            Destroy(gameObject);
-        }
+
         if (isRecoiling)
         {
             if(recoilTimer < recoilLength)
@@ -46,23 +80,53 @@ public class Enemy : MonoBehaviour
                 recoilTimer = 0;
             }
         }
+        else
+        {
+            UpdateEnemyStates();
+        }
     }
+    public virtual void HitFlashFeedback()
+    {
+        sr.material = matFlash;
+        Invoke("ResetMaterial", hitFlashtime);
+    }
+    public virtual void ResetMaterial()
+    {
+        sr.material = matDefault;
+    }
+
     public virtual void EnemyHit(float _dmgDone, Vector2 _hitDirection, float _hitForce)
     {
+        HitFlashFeedback(); //flash white when hit
         health -= _dmgDone;
         if (!isRecoiling)
         {
-            rb.AddForce(-_hitForce * recoilFactor * _hitDirection);
+            GameObject _yellowBlood = Instantiate(yellowBlood, transform.position, Quaternion.identity);
+            Destroy(_yellowBlood, 4.4f);
+            rb.velocity = _hitForce * recoilFactor * _hitDirection;
         }
     }
 
     protected void OnCollisionStay2D(Collision2D _other)
     {
-        if (_other.gameObject.CompareTag("Player") && !PlayerController.Instance.pState.invincible)
+        if (_other.gameObject.CompareTag("Player") && !PlayerController.Instance.pState.invincible && health > 0)
         {
             Attack();
             PlayerController.Instance.HitStopTime(0, 5, 0.5f);
         }
+    }
+
+    protected virtual void Death(float _destroyTime)
+    {
+        Destroy(gameObject, _destroyTime);
+    }
+    protected virtual void UpdateEnemyStates() { }
+
+    protected virtual void ChangeCurrentAnimation() { }
+
+    protected void ChangeState(EnemyStates _newState) 
+    {
+        GetCurrentEnemyState = _newState;
     }
     public virtual void Attack()
     {

@@ -16,7 +16,6 @@ public class SlimeBoss : Enemy
     [SerializeField] private float chargeTimer;
     [SerializeField] private float jumpTimer;
     public bool cutscene = false;
-    Animator anim;
 
     public static SlimeBoss Instance;
     private void Awake()
@@ -40,7 +39,6 @@ public class SlimeBoss : Enemy
         }
         base.Start();
         rb.gravityScale = 12f;
-        anim = GetComponent<Animator>();
         jumpTimer = 0;
         chargeTimer = 0;
     }

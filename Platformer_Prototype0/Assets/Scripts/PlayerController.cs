@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Ui and Camera Stuff")]
     [SerializeField] private UIManager hud;
-    [SerializeField] private GameObject _camFollowGO;
     private CameraFollowObj _camFocus;
     private float fallSpeedThreshold;
     [Space(5)]
@@ -336,35 +335,35 @@ public class PlayerController : MonoBehaviour
 
             if(yAxis == 0 || yAxis < 0 && Grounded())
             {
-                Hit(SideAtkTransform, SideAtkArea, ref pState.recoilingX, recoilXSpeed);
+                Hit(SideAtkTransform, SideAtkArea, ref pState.recoilingX, Vector2.right, recoilXSpeed);
                 Instantiate(slashFX, SideAtkTransform);
             }
             else if(yAxis > 0)
             {
-                Hit(UpAtkTransform, UpAtkArea, ref pState.recoilingY, recoilYSpeed);
+                Hit(UpAtkTransform, UpAtkArea, ref pState.recoilingY, Vector2.up, recoilYSpeed);
                 SlashEffectAngle(slashFX, 80, UpAtkTransform);
             }
             else if (yAxis < 0)
             {
-                Hit(DownAtkTransform, DownAtkArea, ref pState.recoilingY, recoilYSpeed);
+                Hit(DownAtkTransform, DownAtkArea, ref pState.recoilingY, Vector2.down, recoilYSpeed);
                 SlashEffectAngle(slashFX, -90, DownAtkTransform);
             }
         }
     }
 
-    private void Hit(Transform _atkTransform, Vector2 _attackArea, ref bool _recoilDir, float _recoilStrength)
+    private void Hit(Transform _atkTransform, Vector2 _attackArea, ref bool _recoilBool, Vector2 _recoilDir, float _recoilStrength)
     {
         Collider2D[] objectsToHit = Physics2D.OverlapBoxAll(_atkTransform.position, _attackArea, 0, attackableLayer);
 
         if(objectsToHit.Length > 0) 
         {
-            _recoilDir = true;
+            _recoilBool = true;
         }
         for(int i = 0; i < objectsToHit.Length; i++)
         {
             if(objectsToHit[i].GetComponent<Enemy>() != null)
             {
-                objectsToHit[i].GetComponent<Enemy>().EnemyHit(damage, (transform.position -objectsToHit[i].transform.position).normalized, _recoilStrength);
+                objectsToHit[i].GetComponent<Enemy>().EnemyHit(damage, _recoilDir, _recoilStrength);
                 if (objectsToHit[i].CompareTag("Enemy"))
                 {
                     Mana += manaGain; 

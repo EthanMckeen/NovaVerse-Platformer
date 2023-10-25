@@ -5176,7 +5176,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2013456361
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3103480f1cde84548aced41448bffd2a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -5229,6 +5229,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thePlayer: {fileID: 4763718556439029786}
+  hud: {fileID: 0}
+  _camFollowGO: {fileID: 0}
   walkSpeed: 20
   jumpFX: {fileID: 4699607766941065451, guid: 3cacd0b461ce60c49ab49c4f497cfcc7, type: 3}
   jumpForce: 32
@@ -5255,7 +5257,7 @@ MonoBehaviour:
   SideAtkArea: {x: 2, y: 1.5}
   UpAtkArea: {x: 1.5, y: 2}
   DownAtkArea: {x: 1.5, y: 2}
-  damage: 2
+  damage: 1
   slashFX: {fileID: 4440298613930507562, guid: 86a8b994b185ea54db01541da10395a1, type: 3}
   slashSize: {x: 0.4, y: 0.5}
   recoilXSteps: 5
@@ -5327,6 +5329,7 @@ MonoBehaviour:
   healing: 0
   casting: 0
   cutscene: 0
+  slimeKilled: 0
 --- !u!61 &5777713015816450359
 BoxCollider2D:
   m_ObjectHideFlags: 0

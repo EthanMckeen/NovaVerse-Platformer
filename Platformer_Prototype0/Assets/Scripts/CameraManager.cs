@@ -161,6 +161,7 @@ public class CameraManager : MonoBehaviour
     #region Swap Camera
     public void SwapCamera(CinemachineVirtualCamera cameraFromLeft, CinemachineVirtualCamera cameraFromRight, Vector2 triggerExitDirection)
     {
+        Debug.Log(_currentCam);
         //if curCam is on the left and exit was on the right
         if (_currentCam == cameraFromLeft && triggerExitDirection.x > 0f)
         {
@@ -183,7 +184,7 @@ public class CameraManager : MonoBehaviour
             cameraFromRight.enabled = false;
 
             //set new curCam and transp
-            _currentCam = cameraFromRight;
+            _currentCam = cameraFromLeft;
 
             _framingTransposer = _currentCam.GetCinemachineComponent<CinemachineFramingTransposer>();
         }
@@ -193,11 +194,6 @@ public class CameraManager : MonoBehaviour
     #endregion
 
     #region CutsceneRoll
-   /* public void RollCutscene(CinemachineVirtualCamera cutsceneCamera, float cutsceneEnterTime, float cutsceneExitTime)
-    {
-        _cutsceneCameraCoroutine = StartCoroutine(CutsceneCoroutine(cutsceneCamera, cutsceneEnterTime, cutsceneExitTime));
-
-    }*/
 
 
     public IEnumerator CutsceneCoroutine(CinemachineVirtualCamera cutsceneCamera, float cutsceneEnterTime, float cutsceneExitTime)
