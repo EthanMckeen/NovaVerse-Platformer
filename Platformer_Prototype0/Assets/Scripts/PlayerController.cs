@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private UIManager hud;
     private CameraFollowObj _camFocus;
     private float fallSpeedThreshold;
+    AudioManager audioManager;
     [Space(5)]
 
     [Header("Horizontal Movement Settings")]
@@ -136,8 +137,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        //pState = GetComponent<PlayerStateList>();
         if (transform.rotation.y == 0)
         {
             pState.lookingRight = true;
@@ -151,8 +150,8 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         gravity = rb.gravityScale;
         castOrHealTimer = 0f;
-        //_camFocus = _camFollowGO.GetComponent<CameraFollowObj>();
 
+        audioManager = AudioManager.Instance.GetComponent<AudioManager>();
         fallSpeedThreshold = CameraManager.instance._fallSpeedThreshold;
     }
 
@@ -289,6 +288,7 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false;
         pState.dashing = true;
+        audioManager.PlayCharSFX(audioManager.dashSound);
         anim.SetTrigger("Dashing");
         currentDashFX = Instantiate(dashFX, thePlayer);
         rb.gravityScale = 0;
@@ -336,6 +336,7 @@ public class PlayerController : MonoBehaviour
             if(yAxis == 0 || yAxis < 0 && Grounded())
             {
                 Hit(SideAtkTransform, SideAtkArea, ref pState.recoilingX, Vector2.right, recoilXSpeed);
+                audioManager.PlayCharSFX(audioManager.slashSound);
                 Instantiate(slashFX, SideAtkTransform);
             }
             else if(yAxis > 0)
@@ -374,6 +375,7 @@ public class PlayerController : MonoBehaviour
 
     void SlashEffectAngle(GameObject _slashFX, int _effectAngle, Transform _atkTransform)
     {
+        audioManager.PlayCharSFX(audioManager.slashSound);
         _slashFX = Instantiate(_slashFX, _atkTransform);
         _slashFX.transform.eulerAngles = new Vector3(0, 0, _effectAngle);
         _slashFX.transform.localScale = slashSize * transform.localScale.x;
@@ -454,6 +456,7 @@ public class PlayerController : MonoBehaviour
         }
         Health -= Mathf.RoundToInt(_dmg);
         StartCoroutine(Iframes());
+        audioManager.PlayCharSFX(audioManager.bleedSound);
     }
 
     IEnumerator Iframes()
@@ -563,6 +566,7 @@ public class PlayerController : MonoBehaviour
             manaCheck += Time.deltaTime * manaDrain;
             if (manaCheck >= 0.33f)
             {
+                audioManager.PlayCharSFX(audioManager.healSound);
                 Instantiate(healFX, transform);
                 Health++;
                 manaCheck = 0;
@@ -624,6 +628,7 @@ public class PlayerController : MonoBehaviour
         //side cast
         if (yAxis == 0 || (yAxis < 0 && Grounded()))
         {
+            audioManager.PlayCharSFX(audioManager.sideSpellSound);
             anim.SetTrigger("IceCast");
             Instantiate(iceSideSpell, SideAtkTransform);
             GameObject _iceShard = Instantiate(iceProjectile, SideAtkTransform.position, Quaternion.identity);
@@ -642,6 +647,7 @@ public class PlayerController : MonoBehaviour
         //up cast
         else if (yAxis > 0)
         {
+            audioManager.PlayCharSFX(audioManager.upSpellSound);
             anim.SetTrigger("PoisonCast");
             rb.gravityScale = 0f;
             rb.velocity = Vector2.zero;
@@ -655,6 +661,7 @@ public class PlayerController : MonoBehaviour
         //down cast
         else if (yAxis < 0 && !Grounded())
         {
+            audioManager.PlayCharSFX(audioManager.downSpellSound);
             anim.SetTrigger("FireCast");
             rb.gravityScale = 0f;
             rb.velocity = Vector2.zero;
@@ -699,6 +706,7 @@ public class PlayerController : MonoBehaviour
         {
             pState.jumping = true;
             currentJumpFX = Instantiate(jumpFX, thePlayer.position, Quaternion.identity);
+            audioManager.PlayCharSFX(audioManager.jumpSound);
             airJumpCounter++;
             rb.velocity = new Vector3(rb.velocity.x, jumpForce);
         }

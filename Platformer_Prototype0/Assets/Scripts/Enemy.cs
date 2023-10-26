@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
     protected Rigidbody2D rb;
     protected SpriteRenderer sr;
     protected Animator anim;
+    protected AudioManager audioManager;
     private Material matDefault;
     protected enum EnemyStates
     {
@@ -62,6 +63,7 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         matDefault = sr.material;
         player = PlayerController.Instance;
+        audioManager = AudioManager.Instance.GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -87,7 +89,7 @@ public class Enemy : MonoBehaviour
     }
     public virtual void HitFlashFeedback()
     {
-        sr.material = matFlash;
+        sr.material = matFlash; 
         Invoke("ResetMaterial", hitFlashtime);
     }
     public virtual void ResetMaterial()
@@ -99,10 +101,11 @@ public class Enemy : MonoBehaviour
     {
         HitFlashFeedback(); //flash white when hit
         health -= _dmgDone;
+        audioManager.PlayBaseMobSFX(audioManager.dmgedSound);
+        GameObject _yellowBlood = Instantiate(yellowBlood, transform.position, Quaternion.identity);
+        Destroy(_yellowBlood, 4.4f);
         if (!isRecoiling)
         {
-            GameObject _yellowBlood = Instantiate(yellowBlood, transform.position, Quaternion.identity);
-            Destroy(_yellowBlood, 4.4f);
             rb.velocity = _hitForce * recoilFactor * _hitDirection;
         }
     }

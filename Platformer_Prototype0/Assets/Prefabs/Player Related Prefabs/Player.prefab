@@ -5230,7 +5230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thePlayer: {fileID: 4763718556439029786}
   hud: {fileID: 0}
-  _camFollowGO: {fileID: 0}
+  slashSoundFX: {fileID: 0}
   walkSpeed: 20
   jumpFX: {fileID: 4699607766941065451, guid: 3cacd0b461ce60c49ab49c4f497cfcc7, type: 3}
   jumpForce: 32

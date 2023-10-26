@@ -59,6 +59,7 @@ public class SlimeBoss : Enemy
             Destroy(SlimeBlock.instance.gameObject);
             //add the playercheck 
             PlayerController.Instance.pState.slimeKilled = true;
+            Destroy(gameObject);
         }
         base.Update();
         if (cutscene) { return; }
@@ -124,5 +125,16 @@ public class SlimeBoss : Enemy
     {
         float d = PlayerController.Instance.transform.position.x - transform.position.x;
         return d;
+    }
+
+    public override void EnemyHit(float _dmgDone, Vector2 _hitDirection, float _hitForce)
+    {
+        HitFlashFeedback(); //flash white when hit
+        health -= _dmgDone;
+        audioManager.PlayBaseMobSFX(audioManager.dmgedSound);
+        if (!isRecoiling)
+        {
+            rb.velocity = _hitForce * recoilFactor * _hitDirection;
+        }
     }
 }
