@@ -25,6 +25,6 @@ public class Enemy_Dummy : Enemy
 
     public override void EnemyHit(float _dmgDone, Vector2 _hitDirection, float _hitForce)
     {
-        base.EnemyHit(_dmgDone, _hitDirection, _hitForce);
+        base.EnemyHit(0, _hitDirection, _hitForce);
     }
 }

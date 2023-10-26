@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
     public SceneFader sceneFader;
     [SerializeField] UnityEngine.UI.Image manaStorage;
+    [SerializeField] GameObject deathScreen;
     private void Start()
     {
         sceneFader = GetComponentInChildren<SceneFader>();
@@ -28,6 +29,22 @@ public class UIManager : MonoBehaviour
     public void UpdateManaBall(float Mana)
     {
         manaStorage.fillAmount = Mana;
+    }
+
+    public IEnumerator ActivateDeathScreen()
+    {
+        yield return new WaitForSeconds(0.8f);
+        StartCoroutine(sceneFader.Fade(SceneFader.FadeDirection.In));
+
+        yield return new WaitForSeconds(0.8f);
+        deathScreen.SetActive(true);
+    }
+    
+    public IEnumerator DeactivateDeathScreen()
+    {
+        yield return new WaitForSeconds(0.5f);
+        deathScreen.SetActive(false);
+        StartCoroutine(sceneFader.Fade(SceneFader.FadeDirection.Out));
     }
 
 }

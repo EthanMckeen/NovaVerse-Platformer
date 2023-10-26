@@ -94,8 +94,8 @@ public class PlayerController : MonoBehaviour
     [Header(" Spell Settings")]
     [SerializeField] float manaCost = 33f;
     [SerializeField] float timeBetweenCast = 0.5f;
-    [SerializeField] float timeSinceCast; //ser temp
-    [SerializeField] float castOrHealTimer; //ser temp
+    [SerializeField] float timeSinceCast; 
+    [SerializeField] float castOrHealTimer; 
     [SerializeField] float spellDamage;
     [SerializeField] float downSpellForce;
 
@@ -103,6 +103,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject iceProjectile;
     [SerializeField] GameObject poisionUpSpell;
     [SerializeField] GameObject fireDownSpell;
+
+    [SerializeField] public bool unlockIceSpell = false;
+    [SerializeField] public bool unlockPoisonSpell = false;
+    [SerializeField] public bool unlockFireSpell = false;
+    [SerializeField] public bool unlockJumpSpell = false;
+    [SerializeField] public bool unlockDashSpell = false;
 
 
 
@@ -131,6 +137,7 @@ public class PlayerController : MonoBehaviour
             Instance = this;
         }
         Health = maxHealth;
+        pState.alive = true;
         //DontDestroyOnLoad(gameObject);
     }
 
@@ -152,7 +159,7 @@ public class PlayerController : MonoBehaviour
         castOrHealTimer = 0f;
 
         audioManager = AudioManager.Instance.GetComponent<AudioManager>();
-        fallSpeedThreshold = -15f; //matches cameramanager
+        fallSpeedThreshold = -9f; //matches cameramanager
     }
 
     private void OnDrawGizmos()
@@ -181,18 +188,28 @@ public class PlayerController : MonoBehaviour
             
             return;
         }
-        GetInputs();
-        RestoreTimeScale();
         UpdateJumpVariables();
+        RestoreTimeScale();
+        if (pState.alive)
+        {
+            GetInputs();
+        }
+
         if (pState.dashing) return;
-        Move();
-        Jump();
-        Falling();
-        StartDash();
-        Attack();
-        IframeFlash();
-        Heal();
-        CastSpell();
+        if (pState.alive)
+        {
+            if (!pState.healing)
+            {
+                Move();
+                Jump();
+            }
+            Falling();
+            StartDash();
+            Attack();
+            IframeFlash();
+            Heal();
+            CastSpell();
+        }
     }
     private void OnTriggerEnter2D(Collider2D _other) //for up and down cast spell
     {
@@ -235,12 +252,10 @@ public class PlayerController : MonoBehaviour
         if(xAxis > 0 && !pState.lookingRight)
         {
             Turn();
-            Debug.Log("TurnCHECK CHANGE");
         }
         else if(xAxis < 0 && pState.lookingRight)
         {
             Turn();
-            Debug.Log("TurnCHECK CHANGE");
         }
     }
     private void Turn()
@@ -275,6 +290,7 @@ public class PlayerController : MonoBehaviour
 
     void StartDash()
     {
+        if (!unlockDashSpell) { return; }
         if (Input.GetButtonDown("Dash") && canDash && !dashed)
         {
             StartCoroutine(Dash());
@@ -364,7 +380,11 @@ public class PlayerController : MonoBehaviour
         }
         for(int i = 0; i < objectsToHit.Length; i++)
         {
-            if(objectsToHit[i].GetComponent<Enemy>() != null)
+            if(objectsToHit[i].CompareTag("Spikes"))
+            {
+                audioManager.PlayBaseMobSFX(audioManager.spikeBounceSound);
+            }
+            if (objectsToHit[i].GetComponent<Enemy>() != null)
             {
                 objectsToHit[i].GetComponent<Enemy>().EnemyHit(damage, _recoilDir, _recoilStrength);
                 if (objectsToHit[i].CompareTag("Enemy"))
@@ -452,13 +472,25 @@ public class PlayerController : MonoBehaviour
     }
     public void TakeDamage(float _dmg)
     {
-        if (pState.dashing)
+        if (pState.alive)
         {
-            StopDash();
+            if (pState.dashing)
+            {
+                StopDash();
+            }
+            Health -= Mathf.RoundToInt(_dmg);
+            audioManager.PlayCharSFX(audioManager.bleedSound);
+            if (Health <= 0)
+            {
+                Health = 0;
+                StartCoroutine(Death());
+            }
+            else
+            {
+                StartCoroutine(Iframes());
+            }
         }
-        Health -= Mathf.RoundToInt(_dmg);
-        StartCoroutine(Iframes());
-        audioManager.PlayCharSFX(audioManager.bleedSound);
+        
     }
 
     IEnumerator Iframes()
@@ -523,6 +555,29 @@ public class PlayerController : MonoBehaviour
         yield return null;
     }
 
+    IEnumerator Death()
+    {
+        pState.alive = false;
+        rb.velocity = new Vector2 (0, rb.velocity.y);
+        Time.timeScale = 1f;
+        GameObject _bloodSpurtParticles = Instantiate(bloodSpurt, new Vector3(transform.position.x, transform.position.y, transform.position.z - 1), Quaternion.identity);
+        Destroy(_bloodSpurtParticles, 1.5f);
+        anim.SetTrigger("Death");
+
+        yield return new WaitForSeconds(0.9f);
+
+        StartCoroutine(UIManager.Instance.ActivateDeathScreen());
+    }
+
+    public void Respawned()
+    {
+        if (!pState.alive)
+        {
+            pState.alive = true;
+            Health = maxHealth;
+            anim.Play("Player_Idle");
+        }
+    }
     public int Health
     {
         get { return health; }
@@ -558,7 +613,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButton("Cast/Heal") && castOrHealTimer > 0.25f && Mana > 0 &&
             !pState.jumping && !pState.dashing && Grounded())
         {
+
             //set animations
+            xAxis = 0f;
+            yAxis = 0f;
+            rb.velocity = new Vector2(0, rb.velocity.y);
             pState.healing = true;
             timeSinceCast = 0;
             anim.SetBool("Healing", true);
@@ -628,7 +687,7 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetBool("Casting", true);
         //side cast
-        if (yAxis == 0 || (yAxis < 0 && Grounded()))
+        if ((yAxis == 0 || (yAxis < 0 && Grounded())) && unlockIceSpell)
         {
             audioManager.PlayCharSFX(audioManager.sideSpellSound);
             anim.SetTrigger("IceCast");
@@ -644,10 +703,11 @@ public class PlayerController : MonoBehaviour
             pState.recoilingX = true;
             yield return new WaitForSeconds(0.35f);
             anim.SetBool("Casting", false);
+            Mana -= manaCost;
         }
 
         //up cast
-        else if (yAxis > 0)
+        else if (yAxis > 0 && unlockPoisonSpell)
         {
             audioManager.PlayCharSFX(audioManager.upSpellSound);
             anim.SetTrigger("PoisonCast");
@@ -658,10 +718,11 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = gravity;
             pState.casting = false;
             anim.SetBool("Casting", false);
+            Mana -= manaCost;
         }
 
         //down cast
-        else if (yAxis < 0 && !Grounded())
+        else if (yAxis < 0 && !Grounded() && unlockFireSpell)
         {
             audioManager.PlayCharSFX(audioManager.downSpellSound);
             anim.SetTrigger("FireCast");
@@ -671,10 +732,13 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.35f);
             rb.gravityScale = gravity;
             anim.SetBool("Casting", false);
-            //pState.casting = false;
+            Mana -= manaCost;
+        }
+        else
+        {
+            anim.SetBool("Casting", false);
         }
 
-        Mana -= manaCost;
     }
 
 
@@ -704,7 +768,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x, jumpForce);
             pState.jumping = true;
         }
-        if (!Grounded() && airJumpCounter < maxAirJump && Input.GetButtonDown("Jump"))
+        if (!Grounded() && airJumpCounter < maxAirJump && Input.GetButtonDown("Jump") && unlockJumpSpell)
         {
             pState.jumping = true;
             currentJumpFX = Instantiate(jumpFX, thePlayer.position, Quaternion.identity);

@@ -12,5 +12,7 @@ public class PlayerStateList : MonoBehaviour
     public bool healing;
     public bool casting;
     public bool cutscene = false;
+    public bool alive;
+    //-----Cutscence trigged------
     public bool slimeKilled = false;
 }

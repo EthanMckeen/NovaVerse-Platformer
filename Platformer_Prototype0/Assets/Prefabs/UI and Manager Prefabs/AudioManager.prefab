@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSource: {fileID: 6935253264265424163}
   SFXSource: {fileID: 3654050060661735936}
+  bgm1: {fileID: 8300000, guid: 158e1ef6c7c83dd4db68e62e57bc654d, type: 3}
   slashSound: {fileID: 8300000, guid: 486aa08409ea60f45b615dc3eaf3bb15, type: 3}
   bleedSound: {fileID: 8300000, guid: 700813fceedae96459afa955a48b8b3e, type: 3}
   upSpellSound: {fileID: 8300000, guid: 19c8164073161714cabc9508470c4ca2, type: 3}
@@ -56,7 +57,11 @@ MonoBehaviour:
   dashSound: {fileID: 8300000, guid: 069560439c060c142a8c96024bebbb17, type: 3}
   jumpSound: {fileID: 8300000, guid: 101e40ae3f8b6d945ad73309c758235c, type: 3}
   healSound: {fileID: 8300000, guid: 564c3b697f59aba40be0e689bc7a52b7, type: 3}
+  chimePickUpSound: {fileID: 8300000, guid: 57e631083388a684ba3aaac835f33153, type: 3}
+  popPickUpSound: {fileID: 8300000, guid: 1c9f539113bae864c95b23dd7bdc1329, type: 3}
   dmgedSound: {fileID: 8300000, guid: 8ccf05d3a151ca645afdcc3415e18275, type: 3}
+  spikeBounceSound: {fileID: 8300000, guid: cd93830d1fd85484cb6f58f052c7782f, type: 3}
+  audioMixer: {fileID: 24100000, guid: ea2eb78f2ccd3a04e9e62edc04c813e2, type: 2}
 --- !u!1 &6503532842109708826
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,11 +104,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
+  m_audioClip: {fileID: 8300000, guid: 158e1ef6c7c83dd4db68e62e57bc654d, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.047
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

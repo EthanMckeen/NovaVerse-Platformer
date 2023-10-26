@@ -59,6 +59,7 @@ public class SceneFader : MonoBehaviour
         yield return Fade(_fadeDirection);
 
         SceneManager.LoadScene(_sceneToLoad);
+        GameManager.Instance.SceneChanged();
     }
 
     void SetColorImage(ref float _alpha, FadeDirection _fadeDirection)

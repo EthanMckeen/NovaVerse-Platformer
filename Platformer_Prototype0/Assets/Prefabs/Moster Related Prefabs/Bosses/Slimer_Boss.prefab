@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f02a0d625dffca04dbbc45e54020752c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 18
+  health: 7
   matFlash: {fileID: 2100000, guid: 5718b1e2b7e573242b07e9a56e9368ff, type: 2}
   recoilLength: 0.3
   recoilFactor: 0.5

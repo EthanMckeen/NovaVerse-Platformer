@@ -5265,7 +5265,7 @@ MonoBehaviour:
   recoilYSpeed: 32
   healFX: {fileID: 7990329955018306319, guid: c63ac00dc4d5adb4eb24073283f783d5, type: 3}
   health: 0
-  maxHealth: 10
+  maxHealth: 4
   hitFlashSpeed: 4
   bloodSpurt: {fileID: 6806010692964063293, guid: 050b4b36cbdb7c5449fe995756dfec07, type: 3}
   bloodAbsorb: {fileID: 9150881058151134246}
@@ -5328,6 +5328,7 @@ MonoBehaviour:
   healing: 0
   casting: 0
   cutscene: 0
+  alive: 0
   slimeKilled: 0
 --- !u!61 &5777713015816450359
 BoxCollider2D:

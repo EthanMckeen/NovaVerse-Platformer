@@ -31,7 +31,14 @@ public class Crawler_Enemy : Enemy
         ChangeState(EnemyStates.Crawler_Idle);
     }
 
-  
+    protected override void Update()
+    {
+        base.Update();
+        if (!PlayerController.Instance.pState.alive)
+        {
+            ChangeState(EnemyStates.Crawler_Idle);
+        }
+    }
 
 
     protected override void UpdateEnemyStates()

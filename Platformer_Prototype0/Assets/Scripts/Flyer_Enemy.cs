@@ -16,6 +16,14 @@ public class Flyer_Enemy : Enemy
         base.Start();
         ChangeState(EnemyStates.Flyer_Idle);
     }
+    protected override void Update()
+    {
+        base.Update();
+        if (!PlayerController.Instance.pState.alive)
+        {
+            ChangeState(EnemyStates.Flyer_Idle);
+        }
+    }
 
     protected override void UpdateEnemyStates()
     {

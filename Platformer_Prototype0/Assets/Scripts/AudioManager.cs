@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
     [Header("Audio Sources")]
     [SerializeField] AudioSource musicSource;
     [SerializeField] AudioSource SFXSource;
+    [Header("BGM")]
+    public AudioClip bgm1;
     [Header("Player Generated Audio Clips")]
     public AudioClip slashSound;
     public AudioClip bleedSound;
@@ -16,9 +19,12 @@ public class AudioManager : MonoBehaviour
     public AudioClip dashSound;
     public AudioClip jumpSound;
     public AudioClip healSound;
+    public AudioClip chimePickUpSound;
+    public AudioClip popPickUpSound;
     [Header("Enemy basic Generated Audio Clips")]
     public AudioClip dmgedSound;
-
+    public AudioClip spikeBounceSound;
+    public AudioMixer audioMixer;
 
     public static AudioManager Instance { get; private set; }
     private void Awake()
@@ -32,6 +38,7 @@ public class AudioManager : MonoBehaviour
             Instance = this;
         }
         //DontDestroyOnLoad(gameObject);
+
     }
 
 
@@ -42,7 +49,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBaseMobSFX(AudioClip clip)
     {
-        SFXSource.PlayOneShot(clip, GetVol(clip, 1));
+        SFXSource.PlayOneShot(clip, SFXSource.volume * GetVol(clip, 1));
     }
 
     private float GetVol(AudioClip _clip, int i)
@@ -69,12 +76,15 @@ public class AudioManager : MonoBehaviour
         }
         else if(i == 1)
         {
-
+            if (_clip == spikeBounceSound)
+            {
+                vol = 0.05f;
+            }
         }
           
                
 
-        Debug.Log(vol);
+        //Debug.Log(vol);
         return vol;
     }
 
