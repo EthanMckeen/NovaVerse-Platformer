@@ -5230,7 +5230,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thePlayer: {fileID: 4763718556439029786}
   hud: {fileID: 0}
-  slashSoundFX: {fileID: 0}
   walkSpeed: 20
   jumpFX: {fileID: 4699607766941065451, guid: 3cacd0b461ce60c49ab49c4f497cfcc7, type: 3}
   jumpForce: 32
@@ -5261,7 +5260,7 @@ MonoBehaviour:
   slashFX: {fileID: 4440298613930507562, guid: 86a8b994b185ea54db01541da10395a1, type: 3}
   slashSize: {x: 0.4, y: 0.5}
   recoilXSteps: 5
-  recoilYSteps: 5
+  recoilYSteps: 2
   recoilXSpeed: 32
   recoilYSpeed: 32
   healFX: {fileID: 7990329955018306319, guid: c63ac00dc4d5adb4eb24073283f783d5, type: 3}

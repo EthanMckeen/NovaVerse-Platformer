@@ -67,7 +67,7 @@ public class Charger_Enemy : Enemy
 
 
             case EnemyStates.Charger_Suprised:
-                
+                rb.velocity = new Vector2(0, jumpForce);
                 ChangeState(EnemyStates.Charger_Charge);
                 break;
 

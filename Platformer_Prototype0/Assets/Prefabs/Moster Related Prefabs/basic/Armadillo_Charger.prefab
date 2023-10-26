@@ -148,9 +148,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 5
   matFlash: {fileID: 2100000, guid: 5718b1e2b7e573242b07e9a56e9368ff, type: 2}
-  recoilLength: 0
-  recoilFactor: 0
-  isRecoiling: 0
+  recoilLength: 0.1
+  recoilFactor: 0.7
+  isRecoiling: 1
   player: {fileID: 0}
   speed: 3
   damage: 1
@@ -169,7 +169,7 @@ MonoBehaviour:
   _playerLayer:
     serializedVersion: 2
     m_Bits: 64
-  jumpForce: 0
+  jumpForce: 20
   chargeDuration: 3
   chargeSpeedMultiplier: 3
 --- !u!50 &4021014449343174172

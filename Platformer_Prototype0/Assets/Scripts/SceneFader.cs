@@ -22,11 +22,6 @@ public class SceneFader : MonoBehaviour
         fadeOutUIImage = GetComponent<Image>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public IEnumerator Fade(FadeDirection _fadeDirection)
     {

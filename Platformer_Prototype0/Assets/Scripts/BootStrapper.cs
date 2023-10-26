@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public static class BootStrapper 
 {
@@ -9,7 +10,16 @@ public static class BootStrapper
 
    public static void Execute()
     {
-        Debug.Log("Loaded by the Persistent Obj from Bootstrappper script");
-        Object.DontDestroyOnLoad(Object.Instantiate(Resources.Load("Persistent")));
+        if(SceneManager.GetActiveScene().name != "MainMenu")
+        {
+            Debug.Log("Loaded by the Persistent Obj from Bootstrappper script");
+            Object.DontDestroyOnLoad(Object.Instantiate(Resources.Load("Persistent")));
+        }
+        else if(SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            Debug.Log("Loaded by the Persistent Obj from Bootstrappper script");
+            Object.DontDestroyOnLoad(Object.Instantiate(Resources.Load("Persistent")));
+            PlayerController.Instance.pState.cutscene = true;
+        }
     }
 }

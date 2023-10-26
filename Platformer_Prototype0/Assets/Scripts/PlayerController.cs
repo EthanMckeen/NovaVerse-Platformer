@@ -152,7 +152,7 @@ public class PlayerController : MonoBehaviour
         castOrHealTimer = 0f;
 
         audioManager = AudioManager.Instance.GetComponent<AudioManager>();
-        fallSpeedThreshold = CameraManager.instance._fallSpeedThreshold;
+        fallSpeedThreshold = -15f; //matches cameramanager
     }
 
     private void OnDrawGizmos()
@@ -235,10 +235,12 @@ public class PlayerController : MonoBehaviour
         if(xAxis > 0 && !pState.lookingRight)
         {
             Turn();
+            Debug.Log("TurnCHECK CHANGE");
         }
         else if(xAxis < 0 && pState.lookingRight)
         {
             Turn();
+            Debug.Log("TurnCHECK CHANGE");
         }
     }
     private void Turn()
@@ -318,7 +320,7 @@ public class PlayerController : MonoBehaviour
             Move();
         }
 
-        Turn();
+        TurnCheck();
         yield return new WaitForSeconds(_delay);
         pState.cutscene = false;
     }
@@ -725,6 +727,10 @@ public class PlayerController : MonoBehaviour
 
     void Falling()
     {
+        if(CameraManager.instance == null)
+        {
+            return;
+        }
         if(rb.velocity.y < fallSpeedThreshold && !CameraManager.instance.IsLerpingYDamping && !CameraManager.instance.LerpedFromPlayerFalling)
         {
             CameraManager.instance.LerpYDamping(true);
