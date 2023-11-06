@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
     private GameObject currentHealFX;
     [SerializeField] public int health;
     [SerializeField] public int maxHealth;
+    [SerializeField] public int maxTotalHealth;
     [SerializeField] public float hitFlashSpeed;
     [SerializeField] GameObject bloodSpurt;
     [SerializeField] GameObject bloodAbsorb;
