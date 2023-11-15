@@ -5266,6 +5266,7 @@ MonoBehaviour:
   healFX: {fileID: 7990329955018306319, guid: c63ac00dc4d5adb4eb24073283f783d5, type: 3}
   health: 0
   maxHealth: 4
+  maxTotalHealth: 10
   hitFlashSpeed: 4
   bloodSpurt: {fileID: 6806010692964063293, guid: 050b4b36cbdb7c5449fe995756dfec07, type: 3}
   bloodAbsorb: {fileID: 9150881058151134246}
@@ -5285,6 +5286,11 @@ MonoBehaviour:
   iceProjectile: {fileID: 7986196467580045776, guid: 7d8f228bfce3f024aa962c24c9ef77a2, type: 3}
   poisionUpSpell: {fileID: 5557418088157242395, guid: 291df50ec7925a54185117a5114973af, type: 3}
   fireDownSpell: {fileID: 5417363289706773823}
+  unlockIceSpell: 0
+  unlockPoisonSpell: 0
+  unlockFireSpell: 0
+  unlockJumpSpell: 0
+  unlockDashSpell: 0
   pState: {fileID: 0}
 --- !u!95 &7144484561350555770
 Animator:

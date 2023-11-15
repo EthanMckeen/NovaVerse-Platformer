@@ -9,9 +9,11 @@ public class UIManager : MonoBehaviour
     public SceneFader sceneFader;
     [SerializeField] UnityEngine.UI.Image manaStorage;
     [SerializeField] GameObject deathScreen;
+    public HeartController heartCtrl;
     private void Start()
     {
         sceneFader = GetComponentInChildren<SceneFader>();
+        heartCtrl = GetComponent<HeartController>();
     }
     private void Awake()
     {

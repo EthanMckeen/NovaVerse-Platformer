@@ -14,8 +14,8 @@ public class HeartController : MonoBehaviour
     void Start()
     {
         player = PlayerController.Instance;
-        heartContainers = new GameObject[PlayerController.Instance.maxHealth];
-        heartFills = new Image[PlayerController.Instance.maxHealth];
+        heartContainers = new GameObject[PlayerController.Instance.maxTotalHealth];
+        heartFills = new Image[PlayerController.Instance.maxTotalHealth];
         PlayerController.Instance.onHealthChangedCallback += UpdateHeartsHUD;
         InstantiateHeartContainers();
         UpdateHeartsHUD();
@@ -54,7 +54,7 @@ public class HeartController : MonoBehaviour
 
     void InstantiateHeartContainers()
     {
-        for (int i = 0; i < PlayerController.Instance.maxHealth; i++)
+        for (int i = 0; i < PlayerController.Instance.maxTotalHealth; i++)
         {
             GameObject temp = Instantiate(heartContainerPrefab);
             temp.transform.SetParent(heartsParent, false);
@@ -63,10 +63,11 @@ public class HeartController : MonoBehaviour
         }
     }
 
-    void UpdateHeartsHUD()
+    public void UpdateHeartsHUD()
     {
         SetHeartContainers();
         SetFilledContainers();
+        Debug.Log("Complete");
     }
 
 }
