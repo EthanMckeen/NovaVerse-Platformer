@@ -90,6 +90,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float manaCheck;
     [SerializeField] public float manaGain;
     [SerializeField] public float manaDrain;
+    ManaOrbHandler manaOrbHandler;
+    public int manaOrbs;
     [Space(5)]
 
     [Header(" Spell Settings")]
@@ -158,7 +160,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         gravity = rb.gravityScale;
         castOrHealTimer = 0f;
-
+        manaOrbHandler = FindObjectOfType<ManaOrbHandler>();
         audioManager = AudioManager.Instance.GetComponent<AudioManager>();
         fallSpeedThreshold = -9f; //matches cameramanager
     }
@@ -390,7 +392,14 @@ public class PlayerController : MonoBehaviour
                 objectsToHit[i].GetComponent<Enemy>().EnemyHit(damage, _recoilDir, _recoilStrength);
                 if (objectsToHit[i].CompareTag("Enemy"))
                 {
-                    Mana += manaGain; 
+                    if(Mana < 1)
+                    {
+                        Mana += manaGain;
+                    }
+                    else
+                    {
+                        manaOrbHandler.UpdateMana(manaGain * 3);
+                    }
                 }
             }
         }
@@ -595,7 +604,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    float Mana
+    public float Mana
     {
         get { return mana; }
         set
@@ -624,6 +633,8 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("Healing", true);
             bloodAbsorb.SetActive(true);
             //healing
+            //manaOrbHandler.usedMana = true;
+            //manaOrbHandler.countDown = 3f;
             Mana -= Time.deltaTime * manaDrain;
             manaCheck += Time.deltaTime * manaDrain;
             if (manaCheck >= 0.33f)
@@ -704,6 +715,8 @@ public class PlayerController : MonoBehaviour
             pState.recoilingX = true;
             yield return new WaitForSeconds(0.35f);
             anim.SetBool("Casting", false);
+            manaOrbHandler.usedMana = true;
+            manaOrbHandler.countDown = 3f;
             Mana -= manaCost;
         }
 
@@ -719,6 +732,8 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = gravity;
             pState.casting = false;
             anim.SetBool("Casting", false);
+            manaOrbHandler.usedMana = true;
+            manaOrbHandler.countDown = 3f;
             Mana -= manaCost;
         }
 
@@ -733,6 +748,8 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(0.35f);
             rb.gravityScale = gravity;
             anim.SetBool("Casting", false);
+            manaOrbHandler.usedMana = true;
+            manaOrbHandler.countDown = 3f;
             Mana -= manaCost;
         }
         else
