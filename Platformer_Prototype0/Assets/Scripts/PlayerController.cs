@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject slashFX;
     [SerializeField] Vector2 slashSize;
     private bool attack = false;
-    float timeSinceAttack;
+    public float timeSinceAttack;
     bool restoreTime;
     float restoreTimeSpeed;
     [Space(5)]
@@ -633,8 +633,8 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("Healing", true);
             bloodAbsorb.SetActive(true);
             //healing
-            //manaOrbHandler.usedMana = true;
-            //manaOrbHandler.countDown = 3f;
+            manaOrbHandler.usedMana = true;
+            manaOrbHandler.countDown = 3f;
             Mana -= Time.deltaTime * manaDrain;
             manaCheck += Time.deltaTime * manaDrain;
             if (manaCheck >= 0.33f)

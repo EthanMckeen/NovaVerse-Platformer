@@ -19,6 +19,13 @@ public class ManaOrbHandler : MonoBehaviour
         {
             manaOrbs[i].SetActive(true);
         }
+        for (int i = 0; i < 3; i++)
+        {
+            if (manaOrbs[0].activeSelf)
+                orbFills[i].fillAmount = 1;
+            else
+                orbFills[i].fillAmount = 0;
+        }
     }
 
     // Update is called once per frame
@@ -28,7 +35,10 @@ public class ManaOrbHandler : MonoBehaviour
         {
             manaOrbs[i].SetActive(true);
         }
-        CashInMana();
+        if (manaOrbs[0].activeSelf)
+        {
+            CashInMana();
+        }
     }
 
     public void UpdateMana(float _manaGainFrom)
@@ -48,6 +58,7 @@ public class ManaOrbHandler : MonoBehaviour
         if(usedMana && PlayerController.Instance.Mana <= 1)
         {
             countDown -= Time.deltaTime;
+            //Debug.Log(countDown);
         }
 
         if(countDown <= 0)
@@ -55,13 +66,13 @@ public class ManaOrbHandler : MonoBehaviour
             usedMana = false;
             countDown = 3;
 
-            totalManaPool = (orbFills[0].fillAmount += orbFills[1].fillAmount += orbFills[2].fillAmount) * 0.33f;
+            totalManaPool = (orbFills[0].fillAmount += orbFills[1].fillAmount += orbFills[2].fillAmount) *.33f;
+            //Debug.Log(totalManaPool);
             float manaNeeded = 1 - PlayerController.Instance.Mana;
 
             if (manaNeeded > 0)
             {
-                if (totalManaPool >= manaNeeded)
-                {
+             
                     PlayerController.Instance.Mana += manaNeeded;
                     for (int i = 0; i < orbFills.Count; i++)
                     {
@@ -74,7 +85,7 @@ public class ManaOrbHandler : MonoBehaviour
                         UpdateMana(addBackTotal);
                         addBackTotal -= 1;
                     }
-                }
+                
             }
             else
             {

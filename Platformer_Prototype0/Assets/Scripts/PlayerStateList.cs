@@ -15,4 +15,5 @@ public class PlayerStateList : MonoBehaviour
     public bool alive;
     //-----Cutscence trigged------
     public bool slimeKilled = false;
+    public bool finalKilled = false;
 }

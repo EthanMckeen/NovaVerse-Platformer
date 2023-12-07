@@ -11,20 +11,21 @@ public class Enemy : MonoBehaviour
     [Header("Basic Enemy Settings")]
     [SerializeField] protected float recoilLength;
     [SerializeField] protected float recoilFactor;
-    [SerializeField] protected bool isRecoiling;
+    [SerializeField] protected bool isRecoiling = true;
+    [SerializeField] protected bool canRecoil;
     [SerializeField] protected PlayerController player;
-    [SerializeField] protected float speed;
-    [SerializeField] protected float damage;
+    [SerializeField] public float speed;
+    [SerializeField] public float damage;
     [SerializeField] protected GameObject yellowBlood;
     [Space(5)]
     private float hitFlashtime = 0.1f;
 
     protected float recoilTimer;
-    protected Rigidbody2D rb;
+    [HideInInspector] public Rigidbody2D rb;
     protected SpriteRenderer sr;
-    protected Animator anim;
+    public Animator anim;
     protected AudioManager audioManager;
-    private Material matDefault;
+    public Material matDefault;
     protected enum EnemyStates
     {
         //Crawler
@@ -40,7 +41,14 @@ public class Enemy : MonoBehaviour
         //Charger
         Charger_Idle,
         Charger_Suprised,
-        Charger_Charge
+        Charger_Charge,
+
+        //Final Boss
+        FB_Stage1,
+        FB_Stage2,
+        FB_Stage3,
+        FB_Stage4,
+
     }
     protected EnemyStates currentEnemyState;
 
@@ -104,13 +112,13 @@ public class Enemy : MonoBehaviour
         audioManager.PlayBaseMobSFX(audioManager.dmgedSound);
         GameObject _yellowBlood = Instantiate(yellowBlood, transform.position, Quaternion.identity);
         Destroy(_yellowBlood, 4.4f);
-        if (!isRecoiling)
+        if (!isRecoiling && canRecoil)
         {
             rb.velocity = _hitForce * recoilFactor * _hitDirection;
         }
     }
 
-    protected void OnCollisionStay2D(Collision2D _other)
+    protected virtual void OnCollisionStay2D(Collision2D _other)
     {
         if (_other.gameObject.CompareTag("Player") && !PlayerController.Instance.pState.invincible && health > 0)
         {

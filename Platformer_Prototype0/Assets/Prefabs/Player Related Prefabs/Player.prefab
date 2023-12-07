@@ -90,7 +90,7 @@ Transform:
   m_GameObject: {fileID: 5417363289706773823}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.009088879, z: 0, w: 0.9999587}
-  m_LocalPosition: {x: -0.077986225, y: 0.23900032, z: -0.0014177905}
+  m_LocalPosition: {x: -0.077986225, y: -1.07, z: -0.0014177905}
   m_LocalScale: {x: 16.06475, y: 9.907137, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -201,9 +201,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.05}
+  m_Offset: {x: 0, y: 0.123152435}
   serializedVersion: 2
-  m_Radius: 0.07628459
+  m_Radius: 0.08113158
 --- !u!1 &6152669695459428334
 GameObject:
   m_ObjectHideFlags: 0
@@ -5259,6 +5259,7 @@ MonoBehaviour:
   damage: 1
   slashFX: {fileID: 4440298613930507562, guid: 86a8b994b185ea54db01541da10395a1, type: 3}
   slashSize: {x: 0.4, y: 0.5}
+  timeSinceAttack: 0
   recoilXSteps: 5
   recoilYSteps: 2
   recoilXSpeed: 32
@@ -5276,6 +5277,7 @@ MonoBehaviour:
   manaCheck: 0
   manaGain: 0.3
   manaDrain: 0.3
+  manaOrbs: 0
   manaCost: 0.3
   timeBetweenCast: 0.75
   timeSinceCast: 0
@@ -5336,6 +5338,7 @@ MonoBehaviour:
   cutscene: 0
   alive: 0
   slimeKilled: 0
+  finalKilled: 0
 --- !u!61 &5777713015816450359
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5368,7 +5371,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.15721083, y: -0.14092875}
+  m_Offset: {x: -0.15721083, y: -0.13218132}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -5379,5 +5382,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6144216, y: 1.0660515}
+  m_Size: {x: 0.6144216, y: 1.0485566}
   m_EdgeRadius: 0
