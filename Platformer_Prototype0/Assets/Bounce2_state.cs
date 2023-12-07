@@ -17,7 +17,7 @@ public class Bounce2_state : StateMachineBehaviour
         Vector2 _forceDirection = new Vector2(Mathf.Cos(Mathf.Deg2Rad * FinalBoss.Instance.rotationDirectionToTarget),
             Mathf.Sin(Mathf.Deg2Rad * FinalBoss.Instance.rotationDirectionToTarget));
 
-        rb.AddForce(_forceDirection * 3, ForceMode2D.Impulse);
+        rb.AddForce(_forceDirection , ForceMode2D.Impulse);
 
         FinalBoss.Instance.bounceCollider.SetActive(true);
 
@@ -27,6 +27,7 @@ public class Bounce2_state : StateMachineBehaviour
             if (!callOnce)
             {
                 FinalBoss.Instance.ResetAllAttacks();
+                FinalBoss.Instance.CheckBounce();
                 callOnce = true;
             }
             animator.SetTrigger("Grounded");

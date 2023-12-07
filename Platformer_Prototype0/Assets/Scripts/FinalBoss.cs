@@ -6,6 +6,7 @@ public class FinalBoss : Enemy
 {
     public static FinalBoss Instance;
 
+    public bool cutscene = true;
     [Header("Attacking")]
     [SerializeField] GameObject slashFX;
     [SerializeField] public Transform SideAtkTransform, UpAtkTransform, DownAtkTransform;
@@ -70,11 +71,28 @@ public class FinalBoss : Enemy
     // Update is called once per frame
     protected override void Update()
     {
-        base.Update();
-        if (!attacking)
+        if (!cutscene)
         {
-            attackCountdown -= Time.deltaTime;
+            base.Update();
+                    if(health <= 0 && alive)
+                    {
+                        Death(0);
+                    }
+                        if (!attacking)
+                        {
+                            attackCountdown -= Time.deltaTime;
+                        }
+                        if (stunned)
+                        {
+                            rb.velocity = Vector2.zero;
+                        }
         }
+        else
+        {
+            anim.Play("Boss_idle");
+        }
+        
+        
     }
 
     public void Flip()
@@ -98,12 +116,22 @@ public class FinalBoss : Enemy
             switch (GetCurrentEnemyState)
             {
                 case EnemyStates.FB_Stage1:
+                    canStun = true;
+                    attackTimer = 6;
+                    runSpeed = speed;
                     break;
                 case EnemyStates.FB_Stage2:
+                    canStun = true;
+                    attackTimer = 5;
                     break;
                 case EnemyStates.FB_Stage3:
+                    attackTimer = 8;
+                    canStun = false;
                     break;
                 case EnemyStates.FB_Stage4:
+                    attackTimer = 10;
+                    runSpeed = speed / 2;
+                    canStun = false;
                     break;
             }
         }
@@ -142,6 +170,8 @@ public class FinalBoss : Enemy
 
     [HideInInspector] public bool bounceAttack;
     [HideInInspector] public float rotationDirectionToTarget;
+    [HideInInspector] public int bounceCount;
+
 
 
     #endregion
@@ -157,11 +187,68 @@ public class FinalBoss : Enemy
                 StartCoroutine(TripleSlash());
             }
             else
+            {              
+                    StartCoroutine(Lunge());          
+            }
+        }
+        if (currentEnemyState == EnemyStates.FB_Stage2)
+        {
+            if (Vector2.Distance(PlayerController.Instance.transform.position, rb.position) <= attackRange)
             {
-                //StartCoroutine(Lunge());
-                //DiveAttackJump();
-                //BarrageBendDown();
-                //OutBreakBendDown();
+                StartCoroutine(TripleSlash());
+            }
+            else
+            {
+                int _attackChosen = Random.Range(1, 3);
+                if (_attackChosen == 1)
+                {
+                    StartCoroutine(Lunge());
+                }
+                if (_attackChosen == 2)
+                {
+                    DiveAttackJump();
+                }
+                if (_attackChosen == 3)
+                {
+                    BarrageBendDown();
+                }
+            }
+        }
+        if (currentEnemyState == EnemyStates.FB_Stage3)
+        {
+            if (Vector2.Distance(PlayerController.Instance.transform.position, rb.position) <= attackRange)
+            {
+                StartCoroutine(TripleSlash());
+            }
+            else
+            {
+                int _attackChosen = Random.Range(1, 4);
+                if (_attackChosen == 1)
+                {
+                    OutBreakBendDown();
+                }
+                if (_attackChosen == 2)
+                {
+                    DiveAttackJump();
+                }
+                if (_attackChosen == 3)
+                {
+                    BarrageBendDown();
+                }
+                if (_attackChosen == 4)
+                {
+                    BounceAttack();
+                }
+            }
+        }
+        if (currentEnemyState == EnemyStates.FB_Stage4)
+        {
+            if (Vector2.Distance(PlayerController.Instance.transform.position, rb.position) <= attackRange)
+            {
+                StartCoroutine(Slash());
+            }
+            else
+            {
                 BounceAttack();
             }
         }
@@ -437,13 +524,30 @@ public class FinalBoss : Enemy
     void BounceAttack()
     {
         attacking = true;
+        bounceCount = Random.Range(2, 5);
         BounceBendDown();
+    }
+
+    int _bounces = 0;
+
+    public void CheckBounce()
+    {
+        if(_bounces < bounceCount - 1)
+        {
+            _bounces++;
+            BounceBendDown();
+        }
+        else
+        {
+            _bounces = 0;
+            anim.Play("Boss_walk");
+        }
     }
 
     public void BounceBendDown()
     {
         rb.velocity = Vector2.zero;
-        moveToPosition = new Vector2(transform.position.x, rb.position.y + 10);
+        moveToPosition = new Vector2(transform.position.x, (rb.position.y + 10));
         bounceAttack = true;
         anim.SetTrigger("BendDown");
     }
@@ -463,22 +567,85 @@ public class FinalBoss : Enemy
 
     public override void EnemyHit(float _dmgDone, Vector2 _hitDirection, float _hitForce)
     {
-        if (!parrying)
+        if (!stunned)
         {
-            base.EnemyHit(_dmgDone, _hitDirection, _hitForce);
-            if(currentEnemyState != EnemyStates.FB_Stage4 && !barrageAttack)
+            if (!parrying)
             {
-                ResetAllAttacks();
-                StartCoroutine(Parry());
+                if (canStun)
+                {
+                    hitCounter++;
+                    if(hitCounter >= 13)
+                    {
+                        ResetAllAttacks();
+                        StartCoroutine(Stunned());
+                    }
+                }
+                base.EnemyHit(_dmgDone, _hitDirection, _hitForce);
+                if (currentEnemyState != EnemyStates.FB_Stage4 && !barrageAttack)
+                {
+                    ResetAllAttacks();
+                    StartCoroutine(Parry());
+                }
+
             }
-            
+            else
+            {
+                StartCoroutine(Parry2());
+                ResetAllAttacks();
+                StartCoroutine(Slash());
+            }
+
+            if(health > 75)
+            {
+                ChangeState(EnemyStates.FB_Stage1);
+            }else if(health <= 75 && health > 50)
+            {
+                ChangeState(EnemyStates.FB_Stage2);
+            }else if(health <= 50 && health > 25)
+            {
+                ChangeState(EnemyStates.FB_Stage3);
+            }
+            else if (health <= 25 )
+            {
+                ChangeState(EnemyStates.FB_Stage4);
+            }
+            else if (health <= 0)
+            {
+                Death(0);
+            }
         }
         else
         {
-            StartCoroutine(Parry2());
-            ResetAllAttacks();
-            StartCoroutine(Slash());
+            base.EnemyHit(_dmgDone, _hitDirection, _hitForce);
+            StopCoroutine(Stunned());
+            anim.SetBool("Stunned", false);
+            stunned = false;
+
         }
     }
 
+    public IEnumerator Stunned()
+    {
+        stunned = true;
+        hitCounter = 0;
+        anim.SetBool("Stunned", true);
+
+        yield return new WaitForSeconds(6f);
+        anim.SetBool("Stunned", false);
+        stunned = false;
+        yield return null;
+    }
+
+    protected override void Death(float _destroyTime)
+    {
+        ResetAllAttacks();
+        alive = false;
+        rb.velocity = new Vector2(rb.velocity.x, -25);
+        anim.SetTrigger("Die");
+    }
+
+    public void DestroyAfterDeath()
+    {
+        Destroy(gameObject);
+    }
 }

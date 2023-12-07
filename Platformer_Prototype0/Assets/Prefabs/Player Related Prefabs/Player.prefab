@@ -5282,7 +5282,7 @@ MonoBehaviour:
   timeBetweenCast: 0.75
   timeSinceCast: 0
   castOrHealTimer: 0
-  spellDamage: 10
+  spellDamage: 5
   downSpellForce: 1.5
   iceSideSpell: {fileID: 7876878898042733411, guid: 15c678ecbb5463e4689095184e0a58b3, type: 3}
   iceProjectile: {fileID: 7986196467580045776, guid: 7d8f228bfce3f024aa962c24c9ef77a2, type: 3}

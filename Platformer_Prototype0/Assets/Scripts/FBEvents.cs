@@ -92,5 +92,10 @@ public class FBEvents : MonoBehaviour
         FinalBoss.Instance.anim.SetBool("Cast", true);
 
     }
-    
+
+    void DestroyAfterDeath()
+    {
+        FinalBoss.Instance.DestroyAfterDeath();
+    }
+
 }

@@ -20,7 +20,7 @@ public class Idle_State : StateMachineBehaviour
         if (FinalBoss.Instance.attackCountdown <= 0)
         {
             FinalBoss.Instance.AttackHandler();
-            FinalBoss.Instance.attackCountdown = FinalBoss.Instance.attackTimer;
+            FinalBoss.Instance.attackCountdown = Random.Range(FinalBoss.Instance.attackTimer -1, FinalBoss.Instance.attackTimer + 1 );
         }
     }
     void RunToPlayer(Animator animator)

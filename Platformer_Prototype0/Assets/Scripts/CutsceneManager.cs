@@ -72,6 +72,24 @@ public class CutsceneManager : MonoBehaviour
                     Debug.Log("CutSceneIsFinished");
                 }
                 break;
+            case "finalboss":
+                if (PlayerController.Instance.pState.finalKilled == false)
+                {
+                    isCutscenePlaying = true;
+                    PlayerController.Instance.pState.cutscene = true;
+                    Instantiate(Boss, spawnPoint.position, Quaternion.identity);
+                    FinalBoss.Instance.cutscene = true;
+                    //swap to cutscene cam
+                    UIManager.Instance.GetComponent<Canvas>().enabled = false;
+                    yield return new WaitForSeconds(1.2f);
+                    yield return StartCoroutine(CameraManager.instance.CutsceneCoroutine(cutsceneCAM, 3.5f, 2f));
+                    Debug.Log("Returned");
+                    PlayerController.Instance.pState.cutscene = false;
+                    UIManager.Instance.GetComponent<Canvas>().enabled = true;
+                    FinalBoss.Instance.cutscene = false;
+                    Debug.Log("CutSceneIsFinished");
+                }
+                    break;
         }
 
 
